@@ -1,14 +1,19 @@
-version : '3.3'
+version : "3.3"
+
 services:
-  mysqldatabase:
-    image: mysql:latest
-    restart: unless-stopped
-    environment:
-      - MYSQL_ROOT_PASSWORD=$MYSQLDB_ROOT_PASSWORD
-      - MYSQL_DATABASE=$MYSQLDB_DATABASE
-    ports:
-      - 3306:3306
-  app_ratt:
-    image :zidinour/examen-rattrapage-1.0
-  
-  
+ mysqldb:
+  container_name: mysqldb1
+  image: mysql:8
+  restart: unless-stopped
+  environment:
+   MYSQL_ROOT_PASSWORD: root
+  volumes:
+    - /home/mysqldata:/var/lib/mysql
+ spring_app:
+  image: zidinour/examen-rattrapage-1.0
+  container_name: spring-container
+  restart: on-failure
+  ports:
+   - 8089:8089
+  depends_on:     
+   - mysqldb
